@@ -32,7 +32,7 @@ export const ConfirmModal = ({
           <AlertDialogDescription>
             <div>
               {Amount && <p>Amount: {Amount}</p>}
-              <p>Cliq Alias: ASEM</p>
+              <p>Cliq Alias: SUG</p>
               <p>Please include your email in the description.</p>
             </div>
           </AlertDialogDescription>
