@@ -34,6 +34,7 @@ export const CourseEnrollButton = ({
       await axios.post(`/api/courses/${courseId}/checkout`, {
         courseId: courseId,
         userId: userId,
+        price: price,
       });
       toast.success(
         'Enrollment successful!, Please Wait For The Admin To Verify Your Transaction',

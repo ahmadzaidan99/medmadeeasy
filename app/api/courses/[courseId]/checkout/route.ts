@@ -7,13 +7,15 @@ export async function POST(
   req: Request,
 ) {
   try {
-    const { courseId,userId } = await req.json();
+    const { courseId,userId,price } = await req.json();
     const user = await currentUser();
+    const active = price == 0 ;
     const purchase = await db.purchase.create({
       data: {
         courseId: courseId,
         userId: userId,
         email: user?.emailAddresses[0].emailAddress || "",
+        active: active,
       },
     });
     return NextResponse.json(purchase);
