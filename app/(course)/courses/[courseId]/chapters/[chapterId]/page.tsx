@@ -28,6 +28,9 @@ const ChapterIdPage = async ({
       userId,
       courseId: params.courseId,
     });
+    if (!course) {
+      return redirect('/');
+    }
     return (
       <div className='p-4 flex flex-col md:flex-row items-center justify-between'>
         {purchase ? null : (
