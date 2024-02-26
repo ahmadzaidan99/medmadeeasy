@@ -18,6 +18,21 @@ const ChapterIdPage = async ({
 }) => {
   const { userId } = auth();
 
+  if (chapterId == '0') {
+    return (
+      <div className='p-4 flex flex-col md:flex-row items-center justify-between'>
+        <h2 className='text-2xl font-semibold mb-2'>{chapter.title}</h2>
+        {purchase ? null : (
+          <CourseEnrollButton
+            courseId={params.courseId}
+            price={course.price!}
+            userId={userId}
+          />
+        )}
+      </div>
+    );
+  }
+
   if (!userId) {
     return redirect('/');
   }
