@@ -23,7 +23,7 @@ const ChapterIdPage = async ({
     return redirect('/');
   }
 
-  if ((params.chapterId = '0')) {
+  if (params.chapterId == '0') {
     const { course, purchase } = await getEmptyChapter({
       userId,
       courseId: params.courseId,
