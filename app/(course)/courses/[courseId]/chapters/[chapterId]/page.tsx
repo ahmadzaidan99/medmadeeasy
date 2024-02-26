@@ -10,6 +10,7 @@ import { Preview } from '@/components/preview';
 import { VideoPlayer } from './_components/video-player';
 import { CourseEnrollButton } from './_components/course-enroll-button';
 import { CourseProgressButton } from './_components/course-progress-button';
+import { db } from '@/lib/db';
 
 const ChapterIdPage = async ({
   params,
@@ -19,13 +20,32 @@ const ChapterIdPage = async ({
   const { userId } = auth();
 
   if (params.chapterId == '0') {
+    const courseId_ = params.courseId;
+    const purchaseObj = await db.purchase.findUnique({
+      where: {
+        userId_courseId: {
+          userId,
+          courseId_,
+        },
+        active: true,
+      },
+    });
+
+    const courseObj = await db.course.findUnique({
+      where: {
+        isPublished: true,
+        id: params.courseId,
+      },
+      select: {
+        price: true,
+      },
+    });
     return (
       <div className='p-4 flex flex-col md:flex-row items-center justify-between'>
-        <h2 className='text-2xl font-semibold mb-2'>{chapter.title}</h2>
-        {purchase ? null : (
+        {purchaseObj ? null : (
           <CourseEnrollButton
             courseId={params.courseId}
-            price={course.price!}
+            price={courseObj.price!}
             userId={userId}
           />
         )}
