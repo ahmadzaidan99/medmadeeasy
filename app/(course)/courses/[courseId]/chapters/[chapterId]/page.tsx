@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { File } from 'lucide-react';
 
 import { getChapter } from '@/actions/get-chapter';
+import { getEmptyChapter } from '@/actions/get-emptyChapter';
 import { Banner } from '@/components/banner';
 import { Separator } from '@/components/ui/separator';
 import { Preview } from '@/components/preview';
@@ -10,7 +11,6 @@ import { Preview } from '@/components/preview';
 import { VideoPlayer } from './_components/video-player';
 import { CourseEnrollButton } from './_components/course-enroll-button';
 import { CourseProgressButton } from './_components/course-progress-button';
-import { db } from '@/lib/db';
 
 const ChapterIdPage = async ({
   params,
@@ -19,42 +19,26 @@ const ChapterIdPage = async ({
 }) => {
   const { userId } = auth();
 
-  if (params.chapterId == '0') {
-    const courseId_ = params.courseId;
-    const purchaseObj = await db.purchase.findUnique({
-      where: {
-        userId_courseId: {
-          userId,
-          courseId_,
-        },
-        active: true,
-      },
-    });
+  if (!userId) {
+    return redirect('/');
+  }
 
-    const courseObj = await db.course.findUnique({
-      where: {
-        isPublished: true,
-        id: params.courseId,
-      },
-      select: {
-        price: true,
-      },
+  if ((params.chapterId = '0')) {
+    const { course, purchase } = await getEmptyChapter({
+      userId,
+      courseId: params.courseId,
     });
     return (
       <div className='p-4 flex flex-col md:flex-row items-center justify-between'>
-        {purchaseObj ? null : (
+        {purchase ? null : (
           <CourseEnrollButton
             courseId={params.courseId}
-            price={courseObj.price!}
+            price={course.price!}
             userId={userId}
           />
         )}
       </div>
     );
-  }
-
-  if (!userId) {
-    return redirect('/');
   }
 
   const {
