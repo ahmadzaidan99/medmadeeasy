@@ -7,6 +7,9 @@ export async function POST(
 ) {
   try {
     const purchases = await db.purchase.findMany({
+      where: {
+        active: false,
+      },
         include: {
           course: true,
         },
